@@ -61,6 +61,7 @@ For the PG automated audit to pass, the website must contain:
 1. Create the compliant legal pages (`terms.html`, `privacy.html`, `refund.html`).
 2. Update the main page (`index.html`) to include the business information footer and explicit prices. Update the placeholder with the new `통신판매업신고번호`.
 3. Deploy to **Cloudflare Pages** and bind the custom domain (e.g. `your-domain.com`).
+   - **Build Output Directory:** Set the Build Output Directory in Cloudflare Pages to the root directory `/` (empty) to avoid build sync pipelines if using a pure SPA/static project.
    > [!WARNING]
    > **No Free Domains:** Free domain providers like Freenom (providing `.tk`, `.ml`, etc.) have officially shut down as of 2024 due to legal/abuse issues. You must purchase a standard paid TLD (like `.com`, `.org`, `.kr`) from a registrar (e.g., Cloudflare, Porkbun) for PG approval.
 
@@ -88,7 +89,7 @@ async function requestPayment(productName, price) {
   try {
     const response = await PortOne.requestPayment({
       storeId: "store-xxxxx-xxxxx", // Your PortOne Store ID
-      paymentId: `payment-${crypto.randomUUID()}`,
+      paymentId: "pay" + Date.now() + Math.random().toString(36).substring(2, 10), // Safe transaction ID
       orderName: productName,
       totalAmount: price,
       currency: "CURRENCY_KRW",
@@ -115,10 +116,43 @@ async function requestPayment(productName, price) {
 
 ## Troubleshooting & Crucial Tips
 
-* **Why does the PG audit fail?**
-  - Mismatched address/representative details between Hometax and the website footer.
-  - Missing subcontractor disclosure (`(주)포트원`) in `privacy.html`.
-  - Incomplete legal pages (`terms.html`, `refund.html`).
-* **Document Upload Failures:**
-  - NTS documents (사업자등록증/사업자등록증명원) with visible resident registration number tails will be rejected immediately.
-  - Use Python script `fitz` (PyMuPDF) or image editor to draw a solid block over the last 7 digits (`xxxxxx-1******`).
+### 1. Payment ID Constraints (MxIssueNO)
+* **Problem:** In PortOne V2, the `paymentId` maps to the PG's internal merchant transaction ID (e.g. `MxIssueNO`). For many major Korean PGs like Korea Payment Networks (KPN), this ID has a **strict maximum length of 32 bytes** and must only contain alphanumeric characters (no hyphens `-`).
+* **Symptom:** The checkout fails to launch with errors like `MxIssueNO 길이 초과 [최대 길이:32byte]`.
+* **Solution:** Do NOT use raw UUIDs. Instead, generate a shortened, clean string under 32 characters:
+  ```javascript
+  const paymentId = "pay" + Date.now() + Math.random().toString(36).substring(2, 10);
+  ```
+
+### 2. Cloudflare Pages 25MB Size Limit
+* **Problem:** Cloudflare Pages restricts single asset size to **25 MiB**. Large digital downloads (such as PPTX presentation image packs, video handouts, etc.) will cause the build to fail with `Pages only supports files up to 25 MiB in size`.
+* **Solution:** Use Python library `python-pptx` to split large slide files into chunks under 25MB. Link these parts individually (e.g. Part 1, Part 2) on your portal download page.
+
+### 3. Password-Protecting Specific Folders (Middleware)
+* **Problem:** You want to keep your landing/portal list page public but password-protect slides and resource downloads.
+* **Solution:** Place a root-level `_middleware.js` in your Cloudflare Pages Functions directory:
+  ```javascript
+  export async function onRequest(context) {
+    const { request, env } = context;
+    const url = new URL(request.url);
+    
+    // Path checks: Public portal vs Protected views
+    const isSlidesRoute = url.pathname.startsWith("/slides");
+    const isPublicPortal = url.pathname === "/slides" || url.pathname === "/slides/" || url.pathname === "/slides/index.html";
+    
+    if (isSlidesRoute && !isPublicPortal) {
+      const cookieHeader = request.headers.get("Cookie") || "";
+      const isAuthenticated = cookieHeader.includes("ai-ing-auth=verified");
+      
+      if (!isAuthenticated) {
+        // Render login page and pass original URL as redirect parameter
+        return renderLoginPage(url.pathname);
+      }
+    }
+    return context.next();
+  }
+  ```
+
+### 4. Document Masking
+* NTS documents (사업자등록증/사업자등록증명원) with visible resident registration number tails will be rejected immediately.
+* Use Python script `fitz` (PyMuPDF) or image editor to draw a solid block over the last 7 digits (`xxxxxx-1******`).
