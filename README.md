@@ -8,18 +8,22 @@
 
 ## 🗺️ 전체 로드맵 및 스킬 모듈
 
-본 가이드는 창업 준비부터 최종 결제 승인까지의 실무 단계를 6개의 모듈형 스킬로 제공합니다.
+본 가이드는 창업 준비부터 최종 결제 승인까지의 실무 단계를 8개의 모듈형 스킬로 제공합니다.
 
 ```mermaid
 graph TD
     A["1. 사업자 등록<br>(홈택스 업종코드 선택)"] --> B["2. 사업용 세무 카드 등록<br>(매입세액 공제 세팅)"]
     B --> C["3. 에스크로 & 통신판매업<br>(정부24 자진 신고)"]
-    C --> D["4. 사이트 적격 심사 충족<br>(약관 및 필수 준수 요건 검사)"]
-    D --> E["5. 독자 결제창 구현<br>(PortOne V2 API 연동)"]
-    E --> F["6. 기업용 카드 혜택 분석<br>(고정비 최적화 CLI)"]
+    C --> G["4. 기술적인 홈페이지 구축<br>(Vercel / GitHub Pages 배포)"]
+    G --> H["5. 도메인 이메일 & Cloudflare<br>(무료 이메일 Routing & DNS 보안)"]
+    H --> D["6. 사이트 적격 심사 충족<br>(약관 및 필수 준수 요건 검사)"]
+    D --> E["7. 독자 결제창 구현<br>(PortOne V2 API 연동)"]
+    E --> F["8. 기업용 카드 혜택 분석<br>(고정비 최적화 CLI)"]
     
     style A fill:#f9f9f9,stroke:#333,stroke-width:2px
     style C fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style G fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style H fill:#f9f9f9,stroke:#333,stroke-width:2px
     style E fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 
@@ -35,15 +39,23 @@ graph TD
 * **내용**: 전자상거래 소매업 필수 요건인 구매안전서비스(에스크로) 가입과 통신판매업 정부 자진 신고 절차를 다룹니다.
 * **핵심**: 은행권 에스크로 확인증 발급 요령 및 정부24를 통한 온라인 신청 프로세스를 순서대로 이행할 수 있습니다.
 
-### 4. ⚖️ [웹사이트 필수 법적 준수 요건 검사] (korean-website-compliance-pg)
+### 4. 🌐 [기술적인 웹사이트/홈페이지 구축 및 배포] (korean-website-deployment-guide)
+* **내용**: 1인 창업자를 위한 기술적인 웹사이트/홈페이지 구축 및 호스팅 배포(Vercel, GitHub Pages, Netlify) 상세 가이드라인입니다.
+* **핵심**: HTML/CSS/JS 단일 파일 템플릿부터 React, Next.js 등의 모던 스택 선택 가이드, 무료 호스팅 연동 및 커스텀 도메인 연결법.
+
+### 5. ✉️ [Cloudflare 무료 도메인 이메일 및 DNS 설정] (korean-cloudflare-email-setup)
+* **내용**: Cloudflare를 이용한 무료 도메인 이메일 수발신 구축 및 DNS(MX, SPF, DKIM, DMARC) 설정 가이드라인입니다.
+* **핵심**: Cloudflare Email Routing 기반 무료 메일 수신 포워딩, Resend 연동 메일 무료 발신(보내기) 구축, 메일 스팸 분류를 방지하기 위한 보안 DNS 레코드 매핑.
+
+### 6. ⚖️ [웹사이트 필수 법적 준수 요건 검사] (korean-website-compliance-pg)
 * **내용**: PG사 심사 및 카드사 반려를 미연에 방지하기 위해 웹사이트 하단(Footer)의 의무 표기 사항을 검수합니다.
 * **핵심**: 이용약관, 개인정보처리방침, 환불 규정 템플릿 제공 및 사업자번호, 통신판매번호, 에스크로 로고 등 필수 UI 레이아웃 정합성 자가진단.
 
-### 5. 🔌 [독자 결제 사이트 구현 & PG 연동] (korean-pg-business-setup)
+### 7. 🔌 [독자 결제 사이트 구현 & PG 연동] (korean-pg-business-setup)
 * **내용**: 외부 쇼핑몰 플랫폼을 빌리지 않고 내 도메인 내에서 결제가 이루어지도록 독립 결제 시스템 아키텍처를 제공합니다.
 * **핵심**: PortOne V2 API 기준의 결제창 연동 스크립트, Webhook 수신 검증 로직, DB 상태 업데이트 스키마를 포함한 백엔드 연동 템플릿.
 
-### 6. 🔍 [지출 고정비 최적화 카드 분석 CLI] (korean-card-benefits-analyzer)
+### 8. 🔍 [지출 고정비 최적화 카드 분석 CLI] (korean-card-benefits-analyzer)
 * **내용**: 비즈니스 운영 시 광고비, 인프라 비용 지출에 특화된 사업자 카드를 비교 분석하는 간이 CLI 유틸리티입니다.
 * **핵심**: 소스 내 간단한 데이터셋 조회를 통해 비용 절감 혜택이 가장 큰 카드를 추천해 주는 개발자용 스크립트.
 
