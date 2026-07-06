@@ -89,3 +89,9 @@ git clone https://github.com/your-username/korean-business-pg-skills.git
 ### 3. 에어전트 지시 예시
 AI 에이전트에게 본 저장소를 참고하도록 프롬프트로 알려주어 가이드를 받습니다:
 > *"내가 이번에 사이트를 새로 열었는데, 이 저장소의 `korean-website-compliance-pg` 가이드를 보고 내 사이트에 누락된 하단 표기 법적 고지사항이 있는지 검사해 줘."*
+
+---
+
+## 📄 라이선스 (License)
+
+본 저장소의 모든 가이드 및 스킬 패키지는 [MIT License](LICENSE)에 따라 오픈소스로 자유롭게 이용, 수정, 상업적 사용 및 재배포가 가능합니다.
