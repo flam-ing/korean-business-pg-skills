@@ -8,54 +8,86 @@
 
 ## 🗺️ 전체 로드맵 및 스킬 모듈
 
-본 가이드는 창업 준비부터 최종 결제 승인까지의 실무 단계를 8개의 모듈형 스킬로 제공합니다.
+본 가이드는 창업 준비부터 최종 결제 승인까지의 실무 단계를 10개의 모듈형 스킬로 제공합니다.
 
 ```mermaid
 graph TD
-    A["1. 사업자 등록<br>(홈택스 업종코드 선택)"] --> B["2. 사업용 세무 카드 등록<br>(매입세액 공제 세팅)"]
-    B --> C["3. 에스크로 & 통신판매업<br>(정부24 자진 신고)"]
-    C --> G["4. 기술적인 홈페이지 구축<br>(Vercel / GitHub Pages 배포)"]
-    G --> H["5. 도메인 이메일 & Cloudflare<br>(무료 이메일 Routing & DNS 보안)"]
-    H --> D["6. 사이트 적격 심사 충족<br>(약관 및 필수 준수 요건 검사)"]
-    D --> E["7. 독자 결제창 구현<br>(PortOne V2 API 연동)"]
-    E --> F["8. 기업용 카드 혜택 분석<br>(고정비 최적화 CLI)"]
+    subgraph Phase 1: 설립 및 인프라 준비 (순차 실행)
+        A0["0. 예비창업자 혜택 확인"] --> A1["1. 도메인 구매 & 로고/파비콘 세팅"]
+        A1 --> A2["2. 사업자 등록 신청 (홈택스)"]
+        A2 --> A3["3. 업종코드-표준산업분류 매핑 확인"]
+    end
     
-    style A fill:#f9f9f9,stroke:#333,stroke-width:2px
-    style C fill:#f9f9f9,stroke:#333,stroke-width:2px
-    style G fill:#f9f9f9,stroke:#333,stroke-width:2px
-    style H fill:#f9f9f9,stroke:#333,stroke-width:2px
-    style E fill:#f9f9f9,stroke:#333,stroke-width:2px
+    subgraph Phase 2: 사이트 및 통신판매 신고 (병렬 진행 가능)
+        A3 --> B1["4. 에스크로 가입 & 통신판매업 신고"]
+        A3 --> B2["5. 기술적인 홈페이지 구축 (Vercel/GitHub Pages)"]
+        A3 --> B3["6. 도메인 이메일 & Cloudflare 연동"]
+    end
+    
+    subgraph Phase 3: 심사 및 독립 결제망 구축 (순차 실행)
+        B1 & B2 & B3 --> C1["7. 웹사이트 적격 심사 충족 (Compliance Footer)"]
+        C1 --> C2["8. 독자 결제창 구현 (PortOne V2 SDK) & PG 심사"]
+        C2 --> C3["9. 지출 고정비 최적화 카드 분석 CLI"]
+    end
+    
+    style A0 fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style A2 fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style B2 fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style B3 fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style C1 fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style C2 fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 
-### 1. 🏢 [사업자 등록 신청 가이드] (korean-business-registration-hometax)
+### ⏳ 실행 순서 및 선후관계 가이드 (Sequence & Parallel Workflow)
+
+1. **선행 필수 (Step 0 ~ Step 2)**: 
+   * 사업자등록증 발급 전 반드시 **예비창업자 혜택(Step 0)**을 탐색하십시오. 
+   * 등록 전 사용할 **도메인 및 로고/Favicon(Step 1)**을 사전에 세팅하여 사업용 계정과 이메일에 일관되게 바인딩할 준비를 합니다.
+   * 이후 홈택스에서 **사업자등록 신청 및 업종코드 매핑(Step 2)**을 진행합니다.
+2. **병렬 진행 가능 (Step 3 ~ Step 6)**:
+   * 사업자등록이 완료되면 통장 개설 및 세무 준비용 **업종코드-표준산업분류 검증(Step 3)**을 진행하는 것과 동시에, **에스크로/통신판매업 신고(Step 4)**, **웹사이트 구축 배포(Step 5)**, **도메인 이메일/Cloudflare 연결(Step 6)** 단계를 병렬로 실행하여 시간을 단축합니다.
+3. **최종 승인 단계 (Step 7 ~ Step 9)**:
+   * 구축 완료된 웹사이트에 법적 표기 사항인 **Compliance Footer(Step 7)**를 탑재한 후, **PortOne 결제 모듈 연동 및 카드 심사(Step 8)**를 거쳐 최종 오픈하며, **고정비 혜택 분석 CLI(Step 9)**로 비즈니스 카드 사용 혜택을 극대화합니다.
+
+---
+
+### 0. 🎁 [예비창업자 혜택 확인] (korean-pre-startup-benefits)
+* **내용**: 사업자등록증 발급 전 정부의 무상 창업자금(예창패 등) 지원 요건을 확인하는 예비 단계입니다.
+* **핵심**: '기창업자' 지위 전환에 따른 지원 사업 배제 리스크 관리 및 K-Startup 포털 활용 요령.
+
+### 1. 🌐 [도메인 구매 및 로고/파비콘 세팅] (korean-domain-and-logo-setup)
+* **내용**: 브랜드 소유 도메인 확보 및 모던 브라우저에 최적화된 다중 해상도 파비콘(`.ico`)을 추출/반영합니다.
+* **핵심**: 가비아/Cloudflare 도메인 구매와 네임서버 포인팅, Python Pillow 기반의 16px~256px 다중 해상도 변환.
+
+### 2. 🏢 [사업자 등록 신청 가이드] (korean-business-registration-hometax)
 * **내용**: 국세청 홈택스에서 비용 없이 개인/법인 사업자등록을 신청할 때 필요한 가이드라인입니다.
 * **핵심**: 소프트웨어 개발업, 1인 미디어, 전자상거래업 등 창업 유형에 최적화된 업종코드 매핑과 사업자등록신청서 입력서식을 가이드합니다.
 
-### 2. 💳 [사업용 신용카드 세무 최적화] (korean-business-tax-and-cards)
-* **내용**: 초기 고정비(서버비, API 호출 비용 등) 지출 시 세무 처리를 효율화하기 위한 가이드입니다.
-* **핵심**: 홈택스에 사업용 신용카드를 등록하고 부가가치세 매입세액 공제 및 불공제 대상 판정을 수월하게 처리합니다.
+### 3. 📊 [업종코드 - 표준산업분류 연계표] (korean-business-classification-mapping)
+* **내용**: 홈택스 업종코드와 은행 통장 개설 및 청년창업 소득세 감면(50%~100%) 심사에 쓰이는 통계청 표준산업분류(KSIC) 대응표입니다.
+* **핵심**: 525101(전자상거래), 722000(SW 개발) 등 주요 IT 업종과 한국표준산업분류(KSIC) 5자리 코드 실무 연동.
 
-### 3. 📦 [에스크로 가입 & 통신판매업 신고] (korean-escrow-telecom-report)
+### 4. 📦 [에스크로 가입 & 통신판매업 신고] (korean-escrow-telecom-report)
 * **내용**: 전자상거래 소매업 필수 요건인 구매안전서비스(에스크로) 가입과 통신판매업 정부 자진 신고 절차를 다룹니다.
 * **핵심**: 은행권 에스크로 확인증 발급 요령 및 정부24를 통한 온라인 신청 프로세스를 순서대로 이행할 수 있습니다.
 
-### 4. 🌐 [기술적인 웹사이트/홈페이지 구축 및 배포] (korean-website-deployment-guide)
+### 5. 💻 [기술적인 웹사이트/홈페이지 구축 및 배포] (korean-website-deployment-guide)
 * **내용**: 1인 창업자를 위한 기술적인 웹사이트/홈페이지 구축 및 호스팅 배포(Vercel, GitHub Pages, Netlify) 상세 가이드라인입니다.
 * **핵심**: HTML/CSS/JS 단일 파일 템플릿부터 React, Next.js 등의 모던 스택 선택 가이드, 무료 호스팅 연동 및 커스텀 도메인 연결법.
 
-### 5. ✉️ [Cloudflare 무료 도메인 이메일 및 DNS 설정] (korean-cloudflare-email-setup)
+### 6. ✉️ [Cloudflare 무료 도메인 이메일 및 DNS 설정] (korean-cloudflare-email-setup)
 * **내용**: Cloudflare를 이용한 무료 도메인 이메일 수발신 구축 및 DNS(MX, SPF, DKIM, DMARC) 설정 가이드라인입니다.
 * **핵심**: Cloudflare Email Routing 기반 무료 메일 수신 포워딩, Resend 연동 메일 무료 발신(보내기) 구축, 메일 스팸 분류를 방지하기 위한 보안 DNS 레코드 매핑.
 
-### 6. ⚖️ [웹사이트 필수 법적 준수 요건 검사] (korean-website-compliance-pg)
+### 7. ⚖️ [웹사이트 필수 법적 준수 요건 검사] (korean-website-compliance-pg)
 * **내용**: PG사 심사 및 카드사 반려를 미연에 방지하기 위해 웹사이트 하단(Footer)의 의무 표기 사항을 검수합니다.
 * **핵심**: 이용약관, 개인정보처리방침, 환불 규정 템플릿 제공 및 사업자번호, 통신판매번호, 에스크로 로고 등 필수 UI 레이아웃 정합성 자가진단.
 
-### 7. 🔌 [독자 결제 사이트 구현 & PG 연동] (korean-pg-business-setup)
+### 8. 🔌 [독자 결제 사이트 구현 & PG 연동] (korean-pg-business-setup)
 * **내용**: 외부 쇼핑몰 플랫폼을 빌리지 않고 내 도메인 내에서 결제가 이루어지도록 독립 결제 시스템 아키텍처를 제공합니다.
 * **핵심**: PortOne V2 API 기준의 결제창 연동 스크립트, Webhook 수신 검증 로직, DB 상태 업데이트 스키마를 포함한 백엔드 연동 템플릿.
 
-### 8. 🔍 [지출 고정비 최적화 카드 분석 CLI] (korean-card-benefits-analyzer)
+### 9. 💳 [지출 고정비 최적화 카드 분석 CLI] (korean-card-benefits-analyzer)
 * **내용**: 비즈니스 운영 시 광고비, 인프라 비용 지출에 특화된 사업자 카드를 비교 분석하는 간이 CLI 유틸리티입니다.
 * **핵심**: 소스 내 간단한 데이터셋 조회를 통해 비용 절감 혜택이 가장 큰 카드를 추천해 주는 개발자용 스크립트.
 
